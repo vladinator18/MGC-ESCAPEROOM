@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Transition Chamber</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    body, html {
+      margin: 0; padding: 0; height: 100%;
+      background: linear-gradient(to bottom, #05050a 0%, #0a0a12 50%, #020108 100%);
+      overflow: hidden; font-family: 'Orbitron', sans-serif; display: flex; justify-content: center; align-items: center;
+    }
+    #rain-container { position: absolute; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+    .rain-stream {
+      position: absolute; top: -100%; writing-mode: vertical-rl; text-orientation: mixed;
+      white-space: nowrap; font-size: 18px; font-weight: bold; letter-spacing: 6px; opacity: 0; animation: fall linear forwards;
+    }
+    .color-cyan { color: rgba(0, 240, 255, 0.4); text-shadow: 0 0 5px rgba(0, 240, 255, 0.5); }
+    .color-magenta { color: rgba(255, 0, 85, 0.4); text-shadow: 0 0 5px rgba(255, 0, 85, 0.5); }
+    @keyframes fall { 0% { top: -50%; opacity: 0; } 10% { opacity: 1; } 85% { opacity: 1; } 100% { top: 120%; opacity: 0; } }
+    
+    @keyframes cyberSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .valve-rim { width: 130px; height: 130px; border: 4px dashed #00f0ff; border-radius: 50%; position: relative; animation: cyberSpin 1.5s linear infinite; }
+    .spin-jammed { animation: none !important; border-color: #ff0055 !important; box-shadow: 0 0 20px #ff0055; }
+    
+    #transition-content { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    #transition-text { font-size: 28px; color: #00f0ff; text-shadow: 0 0 15px #00f0ff; margin-top: 30px; letter-spacing: 4px; }
+  </style>
+</head>
+<body>
+  <audio id="valve-audio" src="AUDIO/MSC-AUDIO/spinopel-open-an-air-pump-valve-411599.mp3" autoplay></audio>
+  <div id="rain-container"></div>
+  
+  <div id="transition-content">
+    <div class="valve-rim" id="valve">
+      <div style="position: absolute; background: #ff0055; top: 62px; left: -10px; width: 150px; height: 6px; transform: rotate(45deg);"></div>
+      <div style="position: absolute; background: #ff0055; top: 62px; left: -10px; width: 150px; height: 6px; transform: rotate(-45deg);"></div>
+    </div>
+    <div id="transition-text">VENTING CHAMBER...</div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('status') || 'boot';
+    const textEl = document.getElementById('transition-text');
+    const valveEl = document.getElementById('valve');
+
+    if (status === 'fail') {
+      textEl.innerText = "PRESSURE ANOMALY";
+      textEl.style.color = "#ff0055";
+      textEl.style.textShadow = "0 0 15px #ff0055";
+      valveEl.className = "valve-rim spin-jammed";
+    } else if (status === 'pass') {
+      textEl.innerText = "VALVE CALIBRATED";
+    } else {
+      textEl.innerText = "SYSTEM BOOTING...";
+    }
+
+    // Light rain generator
+    const rainContainer = document.getElementById('rain-container');
+    const gods = ["アマテラス", "ᜊᜆ᜔ᜑᜎ", "LẠC LONG QUÂN", "단군", "玉皇大帝", "ZEUS"];
+    setInterval(() => {
+      const stream = document.createElement('div');
+      stream.className = 'rain-stream ' + (Math.random() > 0.5 ? 'color-cyan' : 'color-magenta');
+      stream.style.left = `${Math.random() * 95}%`;
+      stream.style.animationDuration = `${Math.random() * 4 + 4}s`;
+      stream.innerText = gods[Math.floor(Math.random() * gods.length)] + ' // ' + gods[Math.floor(Math.random() * gods.length)];
+      rainContainer.appendChild(stream);
+      setTimeout(() => stream.remove(), 8000);
+    }, 400);
+
+    // Automatically return to Index after exactly 6 seconds
+    setTimeout(() => {
+      const nextRound = urlParams.get('round') || '1';
+      const score = urlParams.get('score') || '0';
+      const hints = urlParams.get('hints') || '3';
+      window.location.href = `Index.html?round=${nextRound}&score=${score}&hints=${hints}`;
+    }, 6000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cyberpunk Data Terminal - Pan-Asian Matrix</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      background-color: #020108; /* Deep dark purple-black void */
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* CRT Scanline Overlay for an authentic retro-futuristic terminal feel */
+    body::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: 
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      background-size: 100% 4px, 3px 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .cyber-matrix {
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
+      grid-auto-rows: 32px;
+      font-size: 22px;
+      /* Extended font stack to ensure Baybayin and other scripts render correctly */
+      font-family: "Courier New", Courier, "Noto Sans Tagalog", "Noto Sans", "Malgun Gothic", "Arial Unicode MS", monospace;
+      font-weight: bold;
+      color: rgba(0, 255, 204, 0.15); /* Dim neon cyan base */
+      justify-content: center;
+      align-content: center;
+    }
+
+    .cyber-matrix > span {
+      text-align: center;
+      text-shadow: 0 0 2px rgba(0, 255, 204, 0.2);
+      user-select: none;
+      line-height: 1.2;
+    }
+
+    /* Staggered Pulsing Animations */
+    .cyber-matrix > span:nth-child(19n + 2) { animation: cyber-pulse 3.5s infinite 0.2s; }
+    .cyber-matrix > span:nth-child(29n + 1) { animation: cyber-pulse 4.1s infinite 0.7s; }
+    .cyber-matrix > span:nth-child(11n)     { animation: cyber-pulse 2.9s infinite 1.1s; color: rgba(255, 0, 255, 0.2); }
+    .cyber-matrix > span:nth-child(37n + 10){ animation: cyber-pulse 5.3s infinite 1.5s; }
+    .cyber-matrix > span:nth-child(41n + 1) { animation: cyber-pulse 3.9s infinite 0.4s; }
+    
+    /* Glitchy Data Streams */
+    .cyber-matrix > span:nth-child(17n + 9) { animation: glitch-pulse 2.8s infinite 0.9s; } 
+    .cyber-matrix > span:nth-child(23n + 18){ animation: cyber-pulse 4.3s infinite 1.3s; }
+    .cyber-matrix > span:nth-child(31n + 4) { animation: cyber-pulse 5.6s infinite 0.1s; }
+    .cyber-matrix > span:nth-child(43n + 20){ animation: glitch-pulse 3.6s infinite 1.8s; }
+    .cyber-matrix > span:nth-child(13n + 6) { animation: cyber-pulse 3.2s infinite 1.2s; }
+
+    @keyframes cyber-pulse {
+      0%, 100% {
+        color: rgba(0, 255, 204, 0.15);
+        text-shadow: 0 0 2px rgba(0, 255, 204, 0.3);
+      }
+      30% {
+        color: #00ffcc; /* Bright Cyan Flash */
+        text-shadow: 0 0 8px #00ffcc, 0 0 15px #00ffcc;
+      }
+      50% {
+        color: #ff00ff; /* Neon Magenta Transition */
+        text-shadow: 0 0 8px #ff00ff, 0 0 15px #ff00ff;
+      }
+      70% {
+        color: #ffffff; /* Core White Overload */
+        text-shadow: 0 0 5px #fff, 0 0 10px #00ffcc;
+      }
+    }
+
+    @keyframes glitch-pulse {
+      0%, 100% { opacity: 1; color: rgba(255, 0, 85, 0.15); }
+      48% { opacity: 1; color: #ff0055; text-shadow: 0 0 10px #ff0055; }
+      50% { opacity: 0.1; } /* Sudden data drop */
+      52% { 
+        opacity: 1; 
+        color: #fff; 
+        /* Chromatic aberration effect during glitch */
+        text-shadow: -3px 0 #00ffcc, 3px 0 #ff00ff; 
+      } 
+      54% { opacity: 0.2; }
+      56% { opacity: 1; color: #00ffcc; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cyber-matrix" id="matrix"></div>
+
+  <script>
+    const container = document.getElementById('matrix');
+    
+    // Character pools
+    const katakana = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ'; // Half-width
+    const baybayin = 'ᜀᜁᜂᜃᜄᜅᜆᜇᜈᜉᜊᜋᜌᜎᜏᜐᜑ';
+    const vietnamese = 'ÁÂĂĐÊÍÔƠÚƯÝẮẰẲẴẶẤẦẨẪẬẾỀỂỄỆỐỒỔỖỘỚỜỞỠỢỨỪỬỮỰ'; // Distinct uppercase diacritics
+    const hangul = 'ㅂㅈㄷㄱㅅㅁㄴㅇㄹㅎㅋㅌㅊㅍ';
+    const hanzi = '電脳世界未来空城'; // Thematic cyberpunk kanji/hanzi
+    
+    // Combine all strings and split into an array
+    const chars = (katakana + baybayin + vietnamese + hangul + hanzi).split('');
+
+    // Dynamically calculate how many characters are needed based on viewport
+    const cols = Math.floor(window.innerWidth / 32);
+    const rows = Math.floor(window.innerHeight / 32);
+    const totalChars = cols * rows + 100; // Extra buffer
+
+    let htmlStream = '';
+    for (let i = 0; i < totalChars; i++) {
+      const randomChar = chars[Math.floor(Math.random() * chars.length)];
+      htmlStream += `<span>${randomChar}</span>`;
+    }
+    
+    container.innerHTML = htmlStream;
+
+    // Optional: Re-render slightly on window resize to ensure full screen coverage
+    window.addEventListener('resize', () => {
+      // Basic reload approach for simplicity, but could be dynamic
+      location.reload(); 
+    });
+  </script>
+</body>
+</html>

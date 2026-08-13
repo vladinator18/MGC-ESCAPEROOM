@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cyberpunk Random Gods Rain Terminal</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: #05050a;
+      overflow: hidden;
+      font-family: "Courier New", Courier, "Noto Sans Tagalog", "Malgun Gothic", monospace;
+    }
+
+    /* --- INITIALIZATION OVERLAY --- */
+    #init-overlay {
+      position: absolute;
+      inset: 0;
+      background-color: #05050a;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: rgba(0, 240, 255, 0.8);
+      font-size: 24px;
+      font-weight: bold;
+      letter-spacing: 4px;
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+      cursor: pointer;
+      transition: opacity 0.5s ease;
+    }
+
+    .pulse-text {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* --- BACKGROUND DEEP VOID --- */
+    .container {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, #05050a 0%, #0a0a12 50%, #020108 100%);
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* --- DIGITAL RAIN CONTAINER --- */
+    #rain-container {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1; /* Behind the loading valve */
+      overflow: hidden;
+    }
+
+    /* Individual Rain Stream Styles */
+    .rain-stream {
+      position: absolute;
+      top: -100%; 
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      white-space: nowrap;
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: 8px;
+      opacity: 0;
+      animation: fall linear forwards; 
+    }
+
+    /* Cyberpunk Colors for the streams */
+    .color-cyan {
+      color: rgba(0, 240, 255, 0.4);
+      text-shadow: 0 0 5px rgba(0, 240, 255, 0.5), 0 0 10px rgba(0, 240, 255, 0.3);
+    }
+    .color-magenta {
+      color: rgba(255, 0, 85, 0.4);
+      text-shadow: 0 0 5px rgba(255, 0, 85, 0.5), 0 0 10px rgba(255, 0, 85, 0.3);
+    }
+    .color-white {
+      color: rgba(255, 255, 255, 0.3);
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.6), 0 0 10px rgba(0, 240, 255, 0.4);
+    }
+
+    @keyframes fall {
+      0% { top: -50%; opacity: 0; }
+      10% { opacity: 1; }
+      85% { opacity: 1; }
+      100% { top: 120%; opacity: 0; }
+    }
+
+    /* --- LOADING ANIMATION KEYFRAMES --- */
+    @keyframes cyberSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes neonFlicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        box-shadow: 0 0 15px #00f0ff, inset 0 0 15px #00f0ff;
+        border-color: #00f0ff;
+      }
+      20%, 24%, 55% {
+        box-shadow: 0 0 2px #005577, inset 0 0 2px #005577;
+        border-color: #005577;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Audio Element (Make sure your 6-second file is in the same folder) -->
+  <audio id="valve-audio" src="sound_of_the_valve.mp3" preload="auto"></audio>
+
+  <!-- Click to Start (Bypasses Browser Autoplay Restrictions) -->
+  <div id="init-overlay">
+    <span class="pulse-text">[ CLICK TO INITIALIZE SYSTEM ]</span>
+  </div>
+
+  <div class="container">
+    
+    <!-- Dynamic Rain Container -->
+    <div id="rain-container"></div>
+
+    <!-- Central Valve Loading Animation -->
+    <div style="display: flex; justify-content: center; align-items: center; width: 300px; height: 300px; position: relative; z-index: 10;">
+      
+      <!-- Outer Tech Rim -->
+      <div style="width: 130px; height: 130px; border: 4px dashed #00f0ff; border-radius: 50%; position: relative; animation: cyberSpin 1.5s linear infinite, neonFlicker 4s infinite;">
+        
+        <!-- Diagonal Tech Spoke 1 -->
+        <div style="position: absolute; background: #ff0055; box-shadow: 0 0 10px #ff0055; top: 62px; left: -10px; width: 150px; height: 6px; transform: rotate(45deg);"></div>
+        
+        <!-- Diagonal Tech Spoke 2 -->
+        <div style="position: absolute; background: #ff0055; box-shadow: 0 0 10px #ff0055; top: 62px; left: -10px; width: 150px; height: 6px; transform: rotate(-45deg);"></div>
+        
+        <!-- Center Tech Core -->
+        <div style="position: absolute; top: 45px; left: 45px; width: 40px; height: 40px; background: #141424; border-radius: 50%; border: 2px solid #ff0055; box-shadow: 0 0 8px #ff0055; z-index: 2; display: flex; align-items: center; justify-content: center;">
+          <!-- Central Warning Dot -->
+          <div style="width: 10px; height: 10px; background: #fff; border-radius: 50%; box-shadow: 0 0 10px #fff;"></div>
+        </div>
+        
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const rainContainer = document.getElementById('rain-container');
+    const initOverlay = document.getElementById('init-overlay');
+    const valveAudio = document.getElementById('valve-audio');
+    
+    // Array of mythological Gods across different languages
+    const gods = [
+      "アマテラス",    // Amaterasu (Japanese)
+      "ᜊᜆ᜔ᜑᜎ",       // Bathala (Baybayin)
+      "LẠC LONG QUÂN", // Lac Long Quan (Vietnamese)
+      "단군",          // Dangun (Korean)
+      "玉皇大帝",      // Jade Emperor (Chinese)
+      "ZEUS",          // Greek
+      "ODIN",          // Norse
+      "ANUBIS",        // Egyptian
+      "スサノオ",      // Susanoo (Japanese)
+      "ᜋᜌ᜔ᜃᜉᜎ᜔",      // Maykapal (Baybayin)
+      "THẦN NÔNG"      // Shennong (Vietnamese)
+    ];
+
+    const colors = ['color-cyan', 'color-cyan', 'color-cyan', 'color-magenta', 'color-white'];
+    let rainInterval;
+
+    function createRainStream() {
+      const stream = document.createElement('div');
+      stream.classList.add('rain-stream');
+      
+      // Pick a random color weighting cyan the heaviest
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      stream.classList.add(randomColor);
+
+      // Randomize position across the X-axis (0% to 98%)
+      const randomLeft = Math.random() * 98;
+      stream.style.left = `${randomLeft}%`;
+
+      // Randomize animation duration between 8s and 20s
+      const randomDuration = Math.random() * 12 + 8;
+      stream.style.animationDuration = `${randomDuration}s`;
+
+      // Construct a random string of 2 to 4 gods for this specific stream
+      const streamLength = Math.floor(Math.random() * 3) + 2;
+      let streamText = [];
+      for(let i = 0; i < streamLength; i++) {
+        streamText.push(gods[Math.floor(Math.random() * gods.length)]);
+      }
+      stream.innerText = streamText.join(' // ');
+
+      // Add to the container
+      rainContainer.appendChild(stream);
+
+      // Clean up the DOM element once its animation finishes
+      setTimeout(() => {
+        stream.remove();
+      }, randomDuration * 1000);
+    }
+
+    // System Boot Sequence
+    initOverlay.addEventListener('click', () => {
+      // Hide the overlay
+      initOverlay.style.opacity = '0';
+      setTimeout(() => { initOverlay.style.display = 'none'; }, 500);
+
+      // Play the 6-second valve audio queue
+      valveAudio.play().catch(error => {
+        console.error("Audio playback failed:", error);
+      });
+
+      // Start the digital rain engine
+      rainInterval = setInterval(createRainStream, 400);
+
+      // Initial burst to populate the screen immediately
+      for(let i = 0; i < 15; i++) {
+        setTimeout(createRainStream, Math.random() * 3000);
+      }
+    });
+
+  </script>
+</body>
+</html>

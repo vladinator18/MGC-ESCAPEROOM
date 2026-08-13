@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Minimalist Light Gray Initialization</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      /* Soft, modern light gray background */
+      background-color: #e0e5ec; 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    /* Container for the morphing shapes */
+    .fluid-container {
+      position: relative;
+      width: 350px;
+      height: 350px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Base morphing blob */
+    .fluid-shape {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      /* Gradient matching the light gray environment */
+      background: linear-gradient(135deg, #f0f5fa, #cbd2db);
+      /* Neumorphic shadow effect: dark shadow on bottom right, white highlight on top left */
+      box-shadow: 15px 15px 35px rgba(163, 177, 198, 0.6), 
+                 -15px -15px 35px rgba(255, 255, 255, 0.8);
+      border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+      animation: morph 8s ease-in-out infinite, spin 15s linear infinite;
+      z-index: 1;
+    }
+
+    /* Second offset blob to create overlapping liquid layers */
+    .fluid-shape:nth-child(2) {
+      background: linear-gradient(135deg, #e6ebf2, #d0d7e3);
+      animation-direction: reverse;
+      animation-duration: 12s;
+      opacity: 0.8;
+      box-shadow: inset 5px 5px 15px rgba(163, 177, 198, 0.3), 
+                  inset -5px -5px 15px rgba(255, 255, 255, 0.5);
+      z-index: 2;
+    }
+
+    /* Third wireframe blob for a subtle structural accent */
+    .fluid-shape:nth-child(3) {
+      background: transparent;
+      border: 1.5px solid rgba(255, 255, 255, 0.6);
+      box-shadow: none;
+      animation-duration: 20s;
+      z-index: 3;
+    }
+
+    /* Inner text area */
+    .core-text {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+    }
+
+    .core-text h1 {
+      font-size: 13px;
+      letter-spacing: 10px;
+      text-transform: uppercase;
+      margin: 0;
+      font-weight: 600;
+      /* Muted slate gray text */
+      color: #8a9ba8;
+      animation: pulse-text 3s ease-in-out infinite;
+    }
+
+    /* Organic morphing keyframes */
+    @keyframes morph {
+      0%, 100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+      34% { border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; }
+      67% { border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%; }
+    }
+
+    /* Slow rotation */
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Gentle fade for the text */
+    @keyframes pulse-text {
+      0%, 100% { opacity: 0.5; text-shadow: none; }
+      50% { opacity: 1; color: #5a758c; text-shadow: 0 0 10px rgba(255,255,255,0.8); } 
+    }
+  </style>
+</head>
+<body>
+
+  <div class="fluid-container">
+    <div class="fluid-shape"></div>
+    <div class="fluid-shape"></div>
+    <div class="fluid-shape"></div>
+    
+    <div class="core-text">
+      <h1>Initializing</h1>
+    </div>
+  </div>
+
+</body>
+</html>
